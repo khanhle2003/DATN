@@ -9,7 +9,7 @@ import flymanage.main.model.flight.ERole;
 import flymanage.main.model.flight.Person;
 import flymanage.main.model.login.Role;
 import flymanage.main.repo.flight.PersonRepository;
-import flymanage.main.repo.flight.RoleRepository;
+import flymanage.main.repo.login.RoleRepository;
 import flymanage.main.security.JwtUtils;
 import flymanage.main.service.flight.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,6 +8,8 @@ import flymanage.main.model.flight.ERole;
 import flymanage.main.model.flight.Person;
 import flymanage.main.model.login.Role;
 import flymanage.main.repo.flight.*;
+import flymanage.main.repo.login.RoleRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

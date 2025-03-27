@@ -1,0 +1,49 @@
+# Build stage
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+
+WORKDIR /app
+
+# Copy pom.xml (đơn giản vì context đã ở thư mục main)
+COPY pom.xml .
+
+# Thêm timezone cho build stage
+ENV TZ=Asia/Ho_Chi_Minh
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Clean and download dependencies with specific settings
+RUN mvn clean \
+    && mvn dependency:resolve \
+    && mvn dependency:resolve-plugins
+
+# Copy source code (đơn giản vì context đã ở thư mục main)
+COPY src ./src
+
+# Build application with specific Java and Maven options
+RUN mvn clean package \
+    -Dmaven.test.skip=true \
+    -Dmaven.compiler.source=17 \
+    -Dmaven.compiler.target=17 \
+    -Djava.version=17 \
+    --batch-mode \
+    --errors \
+    --debug
+
+# Run stage
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
+
+# Thêm timezone cho run stage
+ENV TZ=Asia/Ho_Chi_Minh
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Copy jar from build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Create directories for uploads and backups
+RUN mkdir -p /app/uploads/avatars
+RUN mkdir -p /app/backup_directory
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"] 

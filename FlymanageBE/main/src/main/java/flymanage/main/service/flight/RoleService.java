@@ -6,6 +6,8 @@ import flymanage.main.mapper.RoleMapper;
 import flymanage.main.model.login.Role;
 import flymanage.main.model.flight.ERole;
 import flymanage.main.repo.flight.*;
+import flymanage.main.repo.login.RoleRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
