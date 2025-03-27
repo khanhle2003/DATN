@@ -1,0 +1,23 @@
+.auth {
+    display: inline-block; 
+}
+
+.header-container { 
+    display: flex; 
+    justify-content: flex-end; 
+    
+}
+
+.auth-container {
+    display: flex; 
+    justify-content: flex-end; 
+    margin-top: -68px;
+    margin-right: 40px;
+
+}
+
+.auth {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 20px;
+}

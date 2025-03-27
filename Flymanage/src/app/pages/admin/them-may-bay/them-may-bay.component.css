@@ -1,0 +1,80 @@
+.save {
+    margin-right: 8px;
+  }
+  .aircraft-form {
+    padding: 0 24px;
+  }
+
+.form-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.submit-button {
+    background-color: #4CAF50; /* Màu nền */
+    color: white; /* Màu chữ */
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    height: 60px;
+}
+
+.submit-button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
+
+/* Style cho nút thêm */
+.add-aircraft-button {
+  margin-bottom: 16px;
+}
+
+/* Style cho form items */
+nz-form-item {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+nz-form-label {
+  text-align: left;
+  width: 140px;
+  flex-shrink: 0;
+  font-weight: 500;
+  color: #262626;
+}
+
+nz-form-control {
+  flex: 1;
+}
+
+/* Style cho inputs và select */
+input[nz-input],
+nz-select {
+  width: 100%;
+}
+
+/* Style cho number inputs */
+input[type="number"] {
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .aircraft-form {
+    padding: 0 12px;
+  }
+  
+  nz-form-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nz-form-label {
+    margin-bottom: 8px;
+  }
+}

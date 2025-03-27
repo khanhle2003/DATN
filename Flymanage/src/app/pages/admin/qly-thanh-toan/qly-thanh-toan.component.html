@@ -1,0 +1,114 @@
+<div class="container">
+  <h1>Quản lý Thanh Toán</h1>
+
+  <!-- Bảng danh sách thanh toán -->
+  <nz-table 
+    #paymentTable 
+    nzBordered 
+    [nzData]="payments"
+    [nzPageSize]="pageSize"
+    [nzTotal]="total"
+    [nzPageIndex]="pageIndex"
+    nzTableLayout="fixed">
+    <thead>
+      <tr>
+        <th nzWidth="10%">ID</th>
+        <th nzWidth="15%">Mã giao dịch</th>
+        <th nzWidth="15%">Ngày thanh toán</th>
+        <th nzWidth="15%">Số tiền</th>
+        <th nzWidth="15%">Phương thức</th>
+        <th nzWidth="15%">Mã đặt chỗ</th>
+        <th nzWidth="15%">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let payment of paymentTable.data">
+        <td>{{ payment.id }}</td>
+        <td>{{ payment.transactionCode }}</td>
+        <td>{{ payment.paymentDate | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ payment.amount | currency:'VND' }}</td>
+        <td>{{ payment.method }}</td>
+        <td>
+          <div *ngFor="let bookingId of payment.bookingIds; let last = last">
+            <nz-tag [nzColor]="'blue'">
+              {{ getBookingCode(bookingId) || 'Mã: ' + bookingId }}
+            </nz-tag>
+            <br *ngIf="!last">
+          </div>
+        </td>
+        <td>
+          <a nz-button nzType="link" (click)="openEditModal(payment)">
+            <span nz-icon nzType="edit"></span>
+          </a>
+          <a nz-button 
+             nzType="link" 
+             nzDanger
+             nz-popconfirm
+             nzPopconfirmTitle="Bạn có chắc chắn muốn xóa thanh toán này?"
+             (nzOnConfirm)="deletePayment(payment.id)">
+            <span nz-icon nzType="delete"></span>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <!-- Button thêm mới -->
+  <button nz-button nzType="primary" (click)="openAddModal()" class="add-button">
+    <span nz-icon nzType="plus"></span>
+    Thêm mới thanh toán
+  </button>
+
+  <!-- Modal thêm/sửa thanh toán -->
+  <nz-modal
+    [(nzVisible)]="isModalVisible"
+    [nzTitle]="isEditing ? 'Cập nhật thanh toán' : 'Thêm mới thanh toán'"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+    [nzOkLoading]="isLoading">
+    
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="paymentForm">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">Số tiền</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng nhập số tiền!">
+            <nz-input-number 
+              [nzMin]="0" 
+              formControlName="amount" 
+              [nzStep]="1000"
+              style="width: 100%">
+            </nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">Phương thức</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng chọn phương thức thanh toán!">
+            <nz-select formControlName="method">
+              <nz-option nzValue="CASH" nzLabel="Tiền mặt"></nz-option>
+              <nz-option nzValue="CREDIT_CARD" nzLabel="Thẻ tín dụng"></nz-option>
+              <nz-option nzValue="BANK_TRANSFER" nzLabel="Chuyển khoản"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">Mã đặt chỗ</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng chọn mã đặt chỗ!">
+            <nz-select 
+              formControlName="bookingIds" 
+              nzShowSearch 
+              nzAllowClear
+              nzMode="multiple">
+              <nz-option 
+                *ngFor="let booking of bookings" 
+                [nzValue]="booking.id" 
+                [nzLabel]="booking.bookingCode + ' - ' + booking.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+</div>

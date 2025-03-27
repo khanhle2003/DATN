@@ -1,0 +1,39 @@
+.bookings-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  margin-bottom: 24px;
+  color: #1890ff;
+  text-align: center;
+  font-size: 24px;
+}
+
+:host ::ng-deep .ant-table-thead > tr > th {
+  background-color: #f0f5ff;
+}
+
+.empty-container {
+  text-align: center;
+  padding: 24px;
+}
+
+.empty-container p {
+  color: #8c8c8c;
+  margin-bottom: 16px;
+}
+
+.empty-container button {
+  margin-top: 16px;
+}
+
+:host ::ng-deep .ant-table-pagination {
+  margin: 16px 0;
+}
+
+.ant-tag {
+  min-width: 85px;
+  text-align: center;
+}

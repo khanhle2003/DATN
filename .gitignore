@@ -1,0 +1,5 @@
+# Docker configuration
+docker-compose.yml
+docker-compose.*.yml
+*.dockerfile
+Dockerfile 

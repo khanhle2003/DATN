@@ -1,0 +1,25 @@
+<div class="login-container">
+  <h2>Đăng nhập</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+    <div>
+      <label for="username">Tên đăng nhập</label>
+      <input id="username" type="text" formControlName="username" />
+    </div>
+    <div>
+      <label for="password">Mật khẩu</label>
+      <input id="password" type="password" formControlName="password" />
+    </div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <button type="submit" [disabled]="!loginForm.valid">ĐĂNG NHẬP</button>
+    <div class="options">
+      <label>
+      <a routerLink="/auth/register">Chưa có tài khoản?</a> 
+      </label>
+      <a href="#" class="forgot-password">Quên mật khẩu</a>
+    </div>
+    <div class="social-login">
+      <p>Hoặc là khám phá ngay</p>
+      <button class="facebook" routerLink="/welcome">Khám phá ngay</button>
+    </div>
+  </form>
+</div>

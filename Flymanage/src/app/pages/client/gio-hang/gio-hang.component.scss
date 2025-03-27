@@ -1,0 +1,27 @@
+.payment-summary {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.selected-count {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.total-amount {
+  font-size: 18px;
+  font-weight: bold;
+  color: #f5222d;
+} 

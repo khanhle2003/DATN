@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="header">
+       
+        <a nz-button  nzType="link" routerLink="/aboutus" style="margin-left:1200px; font-size: 20px;">Xem thêm...</a>
+    </div>
+    <div class="card-container">
+        <p-card *ngFor="let flight of flights.slice(0, 4)" [style]="{ width: '20rem', overflow: 'hidden', margin: '0.5rem', border: '1px solid #dee2e6' }">
+            <ng-template pTemplate="header">
+                <img alt="Card" class="w-full" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+            </ng-template>
+            <h3>{{flight.flightCode}}</h3>
+            <p> Giá :{{formatPrice(flight.basePrice)}}</p>
+            <p>
+              Từ : {{flight.departureAirportName}} <br> đến  : {{flight.arrivalAirportName}}
+            </p>
+            <ng-template pTemplate="footer">
+                <div class="flex gap-4 mt-1">
+                    <p-button routerLink="/flight-detail/{{flight.id}}" label="Thông tin chuyến bay" severity="secondary" class="w-full" [outlined]="true" styleClass="w-full"></p-button>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+.save {
+    margin-right: 8px;
+  }
+  .airport-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Khoảng cách giữa các trường */
+    max-width: 400px; /* Chiều rộng tối đa của form */
+    margin: 20px auto; /* Căn giữa form */
+}
+
+.form-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.submit-button {
+    background-color: #4CAF50; /* Màu nền */
+    color: white; /* Màu chữ */
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    height: 60px;
+}
+
+.submit-button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}

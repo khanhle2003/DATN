@@ -1,0 +1,73 @@
+.flight-details {
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  .flight-details h2 {
+    color: #007BFF;
+  }
+  .flight-details p {
+    margin: 5px 0;
+  }
+  .container {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #dee8f7;
+  }
+  
+  .flight-details {
+    margin-top: 24px;
+    
+  }
+  
+  .action-buttons {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+  }
+  
+  .my-3 {
+    margin: 16px 0;
+  }
+
+  .seat-selection {
+    padding: 20px;
+  }
+
+  .seat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .seat-grid button {
+    width: 100%;
+    height: 40px;
+    margin: 2px;
+  }
+
+  .mt-4 {
+    margin-top: 1.5rem;
+  }
+
+  .seat-grid::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .seat-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  .seat-grid::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  .seat-grid::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

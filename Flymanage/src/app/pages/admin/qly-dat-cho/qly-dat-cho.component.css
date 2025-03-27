@@ -1,0 +1,43 @@
+.save {
+    margin-right: 8px;
+  }
+  .booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Khoảng cách giữa các trường */
+    max-width: 400px; /* Chiều rộng tối đa của form */
+    margin: 20px auto; /* Căn giữa form */
+}
+
+.form-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.submit-button {
+    background-color: #4CAF50; /* Màu nền */
+    color: white; /* Màu chữ */
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    height: 60px;
+}
+
+.submit-button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
+
+.add-button {
+  margin-top: 20px;
+}
+
+.form-input {
+  width: 100%;
+  margin-bottom: 10px;
+}

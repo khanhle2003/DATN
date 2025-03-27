@@ -1,0 +1,36 @@
+<div class="card">
+    <div class="flex gap-4 mb-4">
+        <div class="flex items-center gap-2">
+            <label class="w-24">Năm bắt đầu:</label>
+            <p-inputNumber 
+                [(ngModel)]="selectedStartYear" 
+                [min]="minYear" 
+                [max]="maxYear"
+                (onInput)="onYearChange()"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                spinnerMode="horizontal"
+                [step]="1"
+                styleClass="w-48"
+            ></p-inputNumber>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <label class="w-24">Năm kết thúc:</label>
+            <p-inputNumber 
+                [(ngModel)]="selectedEndYear"
+                [min]="minYear" 
+                [max]="maxYear"
+                (onInput)="onYearChange()"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                spinnerMode="horizontal"
+                [step]="1"
+                styleClass="w-48"
+            ></p-inputNumber>
+        </div>
+
+ 
+    </div>
+    <p-chart type="bar" [data]="data" [options]="options" style="height: 30rem;" />
+</div>

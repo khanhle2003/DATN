@@ -1,0 +1,9 @@
+.payment-result-container {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
