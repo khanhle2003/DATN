@@ -3,3 +3,5 @@ docker-compose.yml
 docker-compose.*.yml
 *.dockerfile
 Dockerfile 
+Dockerfile.backend
+Dockerfile.frontend
