@@ -1,0 +1,256 @@
+<h1>Quản lý Chuyến Bay</h1>
+
+<nz-table #flightTable nzBordered [nzData]="flights" nzTableLayout="fixed" [nzPageSize]="pageSize" [nzTotal]="total" [nzPageIndex]="pageIndex" >
+    <thead>
+      <tr>
+        <th nzWidth="20%">Số hiệu chuyến bay</th>
+        <th nzWidth="20%">Sân bay khởi hành</th>
+        <th nzWidth="20%">Sân bay đến</th>
+        <th nzWidth="20%">Thời gian khởi hành</th>
+        <th nzWidth="20%">Thời gian đến</th>
+        <th nzWidth="20%">Giá cơ bản</th>
+        <th nzWidth="20%">Trạng thái</th>
+        <th nzWidth="20%">Máy bay</th>
+        <th nzWidth="20%">Hãng bay</th>
+        <th nzWidth="20%">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let flight of flightTable.data">
+        <td>{{ flight.flightCode }}</td>
+        <td>{{ flight.departureAirportName }}</td>
+        <td>{{ flight.arrivalAirportName }}</td>
+        <td>{{ flight.departureTime | date:'short' }}</td>
+        <td>{{ flight.arrivalTime | date:'short' }}</td>
+        <td>{{ flight.basePrice  }}</td>
+        <td>{{ flight.status }}</td>
+        <td>{{ flight.aircraftName }}</td>
+        <td>{{ flight.airlineName }}</td>
+        <td>
+            <a (click)="showEditModal(flight)" style="margin-left: 10px;">Edit</a>
+            <a (click)="deleteFlight(flight.id)" style="color: red; margin-left: 10px;">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+
+<button nz-button [nzType]="'primary'" (click)="showAddModal()" style="margin-top: 16px;">
+  <span>Thêm chuyến bay mới</span>
+</button>
+
+<nz-modal
+  [(nzVisible)]="isAddModalVisible"
+  nzTitle="Thêm chuyến bay mới"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="addNewFlight()"
+  [nzOkText]="'Thêm'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #flightForm="ngForm" class="flight-form">
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Số hiệu chuyến bay</label>
+        <input
+          type="text"
+          nz-input
+          [(ngModel)]="newFlight.flightCode"
+          name="flightCode"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Sân bay khởi hành</label>
+        <select
+          nz-input
+          [(ngModel)]="newFlight.departureAirportId"
+          name="departureAirport"
+          required
+        >
+          <option *ngFor="let airport of airports" [value]="airport.id">{{ airport.name }}</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Sân bay đến</label>
+        <select
+          nz-input
+          [(ngModel)]="newFlight.arrivalAirportId"
+          name="arrivalAirport"
+          required
+        >
+          <option *ngFor="let airport of airports" [value]="airport.id">{{ airport.name }}</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Thời gian khởi hành</label>
+        <input
+          type="datetime-local"
+          nz-input
+          [(ngModel)]="newFlight.departureTime"
+          name="departureTime"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Thời gian đến</label>
+        <input
+          type="datetime-local"
+          nz-input
+          [(ngModel)]="newFlight.arrivalTime"
+          name="arrivalTime"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Giá cơ bản</label>
+        <input
+          type="number"
+          nz-input
+          [(ngModel)]="newFlight.basePrice"
+          name="basePrice"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Trạng thái</label>
+        <input
+          type="number"
+          nz-input
+          [(ngModel)]="newFlight.status"
+          name="status"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Máy bay</label>
+        <select
+          nz-input
+          [(ngModel)]="newFlight.aircraftId"
+          name="aircraft"
+          required
+        >
+          <option *ngFor="let aircraft of aircrafts" [value]="aircraft.id">{{ aircraft.aircraftCode }}-{{aircraft.aircraftType}}</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Hãng bay</label>
+        <select
+          nz-input
+          [(ngModel)]="newFlight.airlineId"
+          name="airline"
+          required
+        >
+          <option *ngFor="let airline of airlines" [value]="airline.id">{{ airline.name }}</option>
+        </select>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Chỉnh sửa chuyến bay"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="saveEdit()"
+  [nzOkText]="'Lưu'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #editFlightForm="ngForm" class="flight-form">
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Số hiệu chuyến bay</label>
+        <input
+          type="text"
+          nz-input
+          [(ngModel)]="editingFlight.flightCode"
+          name="flightCode"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Sân bay khởi hành</label>
+        <select
+          nz-input
+          [(ngModel)]="editingFlight.departureAirportId"
+          name="departureAirport"
+          required
+        >
+          <option *ngFor="let airport of airports" [value]="airport.id">{{ airport.name }}</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Sân bay đến</label>
+        <select
+          nz-input
+          [(ngModel)]="editingFlight.arrivalAirportId"
+          name="arrivalAirport"
+          required
+        >
+          <option *ngFor="let airport of airports" [value]="airport.id">{{ airport.name }}</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Thời gian khởi hành</label>
+        <input
+          type="datetime-local"
+          nz-input
+          [(ngModel)]="editingFlight.departureTime"
+          name="departureTime"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Thời gian đến</label>
+        <input
+          type="datetime-local"
+          nz-input
+          [(ngModel)]="editingFlight.arrivalTime"
+          name="arrivalTime"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Giá cơ bản</label>
+        <input
+          type="number"
+          nz-input
+          [(ngModel)]="editingFlight.basePrice"
+          name="basePrice"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Trạng thái</label>
+        <input
+          type="number"
+          nz-input
+          [(ngModel)]="editingFlight.status"
+          name="status"
+          required
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Máy bay</label>
+        <select
+          nz-input
+          [(ngModel)]="editingFlight.aircraftId"
+          name="aircraft"
+          required
+        >
+          <option *ngFor="let aircraft of aircrafts" [value]="aircraft.id">{{ aircraft.aircraftCode }}-{{aircraft.aircraftType}}</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Hãng bay</label>
+        <select
+          nz-input
+          [(ngModel)]="editingFlight.airlineId"
+          name="airline"
+          required
+        >
+          <option *ngFor="let airline of airlines" [value]="airline.id">{{ airline.name }}</option>
+        </select>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+

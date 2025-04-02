@@ -1,0 +1,74 @@
+<div class="login-container">
+  <h2>Đăng nhập</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+    <div>
+      <label for="username">Tên đăng nhập</label>
+      <input id="username" type="text" formControlName="username" />
+    </div>
+    <div>
+      <label for="password">Mật khẩu</label>
+      <input id="password" type="password" formControlName="password" />
+    </div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <button type="submit" [disabled]="!loginForm.valid">ĐĂNG NHẬP</button>
+    <div class="options">
+      <label>
+        <a routerLink="/auth/register">Chưa có tài khoản?</a> 
+      </label>
+      <a (click)="showForgotPasswordModal()" class="forgot-password">Quên mật khẩu</a>
+    </div>
+    <div class="social-login">
+      <p>Hoặc là khám phá ngay</p>
+      <button class="facebook" routerLink="/welcome">Khám phá ngay</button>
+    </div>
+  </form>
+</div>
+
+<!-- Thêm template cho modal quên mật khẩu -->
+<nz-modal
+  [(nzVisible)]="isForgotPasswordVisible"
+  [nzTitle]="!showOtpForm ? 'Quên mật khẩu' : 'Nhập mã OTP'"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="modalFooter">
+  
+  <ng-container *nzModalContent>
+    <!-- Form nhập email -->
+    <form nz-form [formGroup]="forgotPasswordForm" *ngIf="!showOtpForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24">Email</nz-form-label>
+        <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập email hợp lệ!">
+          <input nz-input formControlName="email" placeholder="Nhập email của bạn" />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+    <!-- Form nhập OTP -->
+    <form nz-form [formGroup]="otpForm" *ngIf="showOtpForm">
+      <p>Mã OTP đã được gửi đến email của bạn</p>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="24">Mã OTP</nz-form-label>
+        <nz-form-control [nzSpan]="24" nzErrorTip="Vui lòng nhập mã OTP!">
+          <input nz-input formControlName="otp" placeholder="Nhập mã OTP" />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+  </ng-container>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
+    <button 
+      nz-button 
+      nzType="primary" 
+      (click)="!showOtpForm ? onSubmitEmail() : onSubmitOtp()"
+      [disabled]="!showOtpForm ? !forgotPasswordForm.valid : !otpForm.valid">
+      {{ !showOtpForm ? 'Gửi mã OTP' : 'Xác nhận' }}
+    </button>
+  </ng-template>
+</nz-modal>

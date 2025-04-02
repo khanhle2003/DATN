@@ -1,0 +1,10 @@
+spring:
+  config:
+    import:
+      - classpath:config/server.yaml
+      - classpath:config/spring-datasource.yaml
+      - classpath:config/spring-jpa.yaml
+      - classpath:config/spring-mail.yaml
+      - classpath:config/backup.yaml
+      - classpath:config/jwt.yaml
+      - classpath:config/file-upload.yaml

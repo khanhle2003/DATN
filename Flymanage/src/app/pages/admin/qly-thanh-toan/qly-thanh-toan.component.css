@@ -1,0 +1,19 @@
+.container {
+  padding: 24px;
+}
+
+h1 {
+  margin-bottom: 24px;
+}
+
+.add-button {
+  margin: 16px 0;
+}
+
+:host ::ng-deep .ant-table-thead > tr > th {
+  background-color: #f0f2f5;
+}
+
+:host ::ng-deep .ant-form-item {
+  margin-bottom: 16px;
+}

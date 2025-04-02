@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="header">
+        <h2>
+        </h2>
+    </div>
+    <div class="card-container">
+        <p-card *ngFor="let flight of pagedFlights" [style]="{ width: '15rem', overflow: 'hidden', margin: '0.5rem', border: '1px solid #dee2e6' }">
+            <ng-template pTemplate="header">
+                <img alt="Card" class="w-full" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+            </ng-template>
+            <h3>{{flight.flightCode}}</h3>
+            <p>{{formatPrice(flight.basePrice)}}</p>
+            <p>
+              Từ   {{flight.departureAirportName}} <br> đến {{flight.arrivalAirportName}}
+            </p>
+            <p> Hãng bay:{{flight.airlineName}}</p>
+            <p> Máy bay:{{flight.aircraftName}}</p>
+            <ng-template pTemplate="footer">
+                <div class="flex gap-4 mt-1">
+                    <p-button routerLink="/flight-detail/{{flight.id}}" label="Detail" severity="secondary" class="w-full" [outlined]="true" styleClass="w-full"></p-button>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzTotal]="filteredFlights.length"
+      [nzPageSize]="pageSize"
+      (nzPageIndexChange)="onPageIndexChange($event)"
+    ></nz-pagination>
+</div>

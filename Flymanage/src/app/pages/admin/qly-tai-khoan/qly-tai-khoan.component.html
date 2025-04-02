@@ -1,0 +1,240 @@
+<h1>Quản lý Người Dùng</h1>
+
+<nz-table #editRowTable nzBordered [nzData]="listOfPersons" nzTableLayout="fixed" [nzPageSize]="pageSize" [nzTotal]="total" [nzPageIndex]="pageIndex">
+    <thead>
+      <tr>
+        <th nzWidth="20%">Tên đăng nhập</th>
+        <th nzWidth="20%">Email</th>
+        <th nzWidth="20%">Số điện thoại</th>
+        <th nzWidth="20%">Họ và tên</th>
+        <th nzWidth="20%">CCCD</th>
+        <th nzWidth="20%">Passport</th>
+        <th nzWidth="20%">Ngày sinh</th>
+        <th nzWidth="20%">Quốc tịch</th>
+        <th nzWidth="20%">Avatar</th>
+        <th nzWidth="20%">Vai trò</th>
+        <th nzWidth="20%">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let person of editRowTable.data">
+        <td>{{ person.username }}</td>
+        <td>{{ person.email }}</td>
+        <td>{{ person.phone }}</td>
+        <td>{{ person.fullName }}</td>
+        <td>{{ person.identityCard }}</td>
+        <td>{{ person.passport }}</td>
+        <td>{{ person.dateOfBirth }}</td>
+        <td>{{ person.nationality }}</td>
+        <td>
+          <img 
+            [src]="'/prx/api/persons/' + person.id + '/avatar'" 
+            alt="Avatar" 
+            style="width: 50px; height: 50px; border-radius: 50%;"
+            (error)="handleAvatarError($event)"
+          />
+        </td>
+        <td>{{ person.roles }}</td>
+        <td>
+          <a (click)="showEditModal(person)">Chỉnh sửa</a>
+          <a (click)="deletePerson(person.id!)" style="color: red; margin-left: 10px;">Xóa</a>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+
+<!-- Thêm nút để mở modal -->
+<button nz-button nzType="primary" (click)="showAddModal()" class="add-user-button">
+  <span nz-icon nzType="plus"></span>
+  Thêm Người Dùng
+</button>
+
+<!-- Modal form -->
+<nz-modal
+  [(nzVisible)]="isAddModalVisible"
+  nzTitle="Thêm Người Dùng Mới"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="addNewPerson()"
+  [nzOkText]="'Thêm'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #personForm="ngForm" class="person-form">
+      <nz-form-item>
+        <nz-form-label nzFor="username">Tên đăng nhập</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newPerson.username" name="username" id="username" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Mật khẩu</nz-form-label>
+        <nz-form-control [nzErrorTip]="passwordErrorTpl">
+          <input type="password" 
+                 nz-input 
+                 [(ngModel)]="newPerson.password" 
+                 name="password" 
+                 required 
+                 minlength="6"
+                 #password="ngModel" />
+          <ng-template #passwordErrorTpl let-control>
+            <ng-container *ngIf="password.errors?.['minlength']">
+              Mật khẩu phải có ít nhất 6 ký tự
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>CCCD</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newPerson.identityCard" name="cccd" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Passport</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newPerson.passport" name="passport" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Email</nz-form-label>
+        <nz-form-control>
+          <input type="email" nz-input [(ngModel)]="newPerson.email" name="email" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Số điện thoại</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newPerson.phone" name="phone" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Họ và tên</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newPerson.fullName" name="fullName" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="dateOfBirth">Ngày sinh</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker 
+            [(ngModel)]="newPerson.dateOfBirth" 
+            name="dateOfBirth" 
+            id="dateOfBirth"
+            nzFormat="dd/MM/yyyy"
+            required>
+          </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Quốc tịch</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newPerson.nationality" name="nationality" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Avatar</nz-form-label>
+        <nz-form-control>
+          <div *ngIf="newPerson.avatar" class="avatar-preview">
+            <img [src]="newPerson.avatar" alt="Avatar Preview" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;" />
+            <button nz-button nzType="text" (click)="clearAvatar()">
+              <span nz-icon nzType="close"></span>
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<!-- Edit Modal -->
+<nz-modal
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Chỉnh Sửa Người Dùng"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="saveEdit()"
+  [nzOkText]="'Lưu'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #editPersonForm="ngForm" class="person-form">
+      <nz-form-item>
+        <nz-form-label>Tên đăng nhập</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingPerson.username" name="username" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Email</nz-form-label>
+        <nz-form-control>
+          <input type="email" nz-input [(ngModel)]="editingPerson.email" name="email" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Số điện thoại</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingPerson.phone" name="phone" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Họ và tên</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingPerson.fullName" name="fullName" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>CCCD</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingPerson.identityCard" name="identityCard" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Passport</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingPerson.passport" name="passport" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Ngày sinh</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker 
+            [(ngModel)]="editingPerson.dateOfBirth" 
+            name="dateOfBirth"
+            nzFormat="dd/MM/yyyy"
+            required>
+          </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Quốc tịch</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingPerson.nationality" name="nationality" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Vai trò</nz-form-label>
+        <nz-form-control>
+          <select [(ngModel)]="editingPerson.roles" name="roles" required>
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

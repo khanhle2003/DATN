@@ -1,0 +1,97 @@
+<nz-layout class="app-layout">
+    <nz-sider class="menu-sidebar"
+      nzCollapsible
+      nzWidth="256px"
+      nzBreakpoint="md"
+      [(nzCollapsed)]="isCollapsed"
+      [nzTrigger]="null">
+      <div class="sidebar-logo">
+        <a href="https://ng.ant.design/" target="_blank">
+          <img src="https://thumbs.dreamstime.com/b/illustration-drawing-art-flight-logo-white-background-flight-logo-180260929.jpg" alt="logo">
+          <h1>FlywithK</h1>
+        </a>
+      </div>
+      <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-submenu nzOpen nzTitle="Trang chủ" nzIcon="dashboard">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome">Trang chủ</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/aboutus">Danh sách chuyến bay</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/client/ve-chung-toi">Vé chung tối</a>
+            </li>
+
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="Cá nhân" nzIcon="form">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="client/thong-tin-tai-khoan">Tài khoản</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="client/gio-hang">Giỏ hàng</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="Nhân viên" nzIcon="user" *ngIf="roles.includes('ROLE_STAFF') || roles.includes('ROLE_ADMIN')">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/them-chuyen-bay">Thêm chuyến bay</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/them-hang-bay">Thêm hãng bay</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/them-may-bay">Thêm máy bay</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/them-san-bay">Thêm sân bay</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/qly-tai-khoan">Quản lý tài khoản</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/qly-dat-cho">Quản lý đặt chỗ</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/qly-thanh-toan">Quản lý thanh toán</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="Admin" nzIcon="user" *ngIf="roles.includes('ROLE_ADMIN')">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="admin/chart-mainpage">Thống kê</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/auth/flight-list">Lịch bay</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout >
+      <nz-header >
+        <div class="app-header">
+          <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+              <span class="trigger"
+                 nz-icon
+                 [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+              ></span>
+          </span>
+        <app-header></app-header>
+        </div>
+      </nz-header>
+      <nz-content>
+        <div class="inner-content">
+          <router-outlet></router-outlet>
+        </div>
+   
+      </nz-content>
+    
+    </nz-layout>
+  </nz-layout>
+  

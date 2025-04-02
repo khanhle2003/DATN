@@ -1,0 +1,18 @@
+<!-- <div class="auth-container">
+    <ng-container *ngIf="isLoggedIn; else loggedOut">
+        <a class="auth"  (click)="logout()">Đăng xuất</a>
+    </ng-container>
+    <ng-template #loggedOut>
+        <a class="auth" routerLink="/login">Đăng nhập</a> | <a class="auth" routerLink="/register">Đăng ký</a>
+    </ng-template>
+</div> -->
+<div class="auth-container">
+    <ng-container *ngIf="authService.isLoggedIn$ | async; else loginButton">
+        <span>Hello, {{ authService.userName$ | async }}</span>
+        <a class="auth" (click)="logout()">Đăng xuất</a>
+      </ng-container>
+      <ng-template #loginButton>
+        <a class="auth" routerLink="/auth/login">Đăng nhập</a> | <a class="auth" routerLink="/auth/register">Đăng ký</a>
+      </ng-template>
+</div>
+ 

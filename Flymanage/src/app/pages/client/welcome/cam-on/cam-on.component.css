@@ -1,0 +1,47 @@
+h1, p {
+    font-size: 24px; 
+    margin: 20px; 
+}
+
+.news-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.news-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.news-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 30%;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.news-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.news-item h3 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.news-item p {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.news-item a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+}

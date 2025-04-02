@@ -1,0 +1,14 @@
+<div class="payment-result-container">
+  <nz-spin [nzSpinning]="loading">
+    <nz-result
+      [nzStatus]="paymentSuccess ? 'success' : 'error'"
+      [nzTitle]="paymentSuccess ? 'Thanh toán thành công!' : 'Thanh toán thất bại!'"
+      [nzSubTitle]="paymentSuccess ? 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.' : 'Đã xảy ra lỗi trong quá trình thanh toán.'"
+    >
+      <div nz-result-extra>
+        <button nz-button nzType="primary" (click)="goToBookings()">Xem đơn hàng của tôi</button>
+        <button nz-button (click)="goToHome()">Về trang chủ</button>
+      </div>
+    </nz-result>
+  </nz-spin>
+</div>

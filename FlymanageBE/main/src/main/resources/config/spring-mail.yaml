@@ -1,0 +1,11 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lythatda942003@gmail.com
+    password: oier dpdk cuav etkf
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.transport.protocol: smtp 

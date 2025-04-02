@@ -1,0 +1,16 @@
+:host {
+    display: block;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  
+  nz-list-item {
+    padding: 12px 0;
+  }
+  
+  strong {
+    margin-right: 10px;
+    color: #666;
+  }
+  

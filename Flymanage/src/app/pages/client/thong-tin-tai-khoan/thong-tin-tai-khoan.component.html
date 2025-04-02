@@ -1,0 +1,165 @@
+<nz-card nzTitle="Thông tin tài khoản" [nzBordered]="true" style="width: 400px; margin: auto;">
+  <nz-spin [nzSpinning]="loading">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <nz-avatar 
+        [nzSize]="200" 
+        [nzSrc]="'/prx/api/persons/' + user.id + '/avatar?' + timestamp"
+        (error)="handleAvatarError($event)">
+      </nz-avatar>
+      <div style="margin-top: 8px;">
+        <button nz-button (click)="fileInput.click()">
+          <i nz-icon nzType="upload"></i>
+          Thay đổi ảnh đại diện
+        </button>
+        <input
+          #fileInput
+          type="file"
+          style="display: none"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        >
+      </div>
+      <h2 style="margin-top: 16px;">{{ user.fullName }}</h2>
+    </div>
+
+    <!-- View Mode -->
+    <ul nz-list [nzSplit]="true" *ngIf="!isEditing">
+      <li nz-list-item><strong>Username:</strong> {{ user.username }}</li>
+      <li nz-list-item><strong>Email:</strong> {{ user.email }}</li>
+      <li nz-list-item><strong>Phone:</strong> {{ user.phone || 'Chưa cập nhật' }}</li>
+      <li nz-list-item><strong>CMND/CCCD:</strong> {{ user.identityCard || 'Chưa cập nhật' }}</li>
+      <li nz-list-item><strong>Passport:</strong> {{ user.passport || 'Chưa cập nhật' }}</li>
+      <li nz-list-item><strong>Ngày sinh:</strong> {{ user.dateOfBirth || 'Chưa cập nhật' }}</li>
+      <li nz-list-item><strong>Quốc tịch:</strong> {{ user.nationality || 'Chưa cập nhật' }}</li>
+    </ul>
+
+    <!-- Edit Mode Buttons -->
+    <div style="text-align: center; margin-top: 24px;">
+      <ng-container *ngIf="!isEditing">
+        <button nz-button nzType="primary" style="margin-right: 8px;" (click)="showEditModal()">
+          <i nz-icon nzType="edit"></i>
+          Sửa thông tin
+        </button>
+        <button (click)="showChangePasswordModal()">
+          <i nz-icon nzType="lock"></i>
+          Đổi mật khẩu
+        </button>
+      </ng-container>
+    </div>
+  </nz-spin>
+</nz-card>
+
+<!-- Template for Edit Modal -->
+<ng-template #editModal>
+  <form nz-form>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Họ tên</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input [(ngModel)]="editForm.fullName" name="fullName" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Email</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input [(ngModel)]="editForm.email" name="email" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Số điện thoại</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input [(ngModel)]="editForm.phone" name="phone" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">CMND/CCCD</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input [(ngModel)]="editForm.identityCard" name="identityCard" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Passport</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input [(ngModel)]="editForm.passport" name="passport" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Ngày sinh</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <nz-date-picker [(ngModel)]="editForm.dateOfBirth" name="dateOfBirth"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Quốc tịch</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input [(ngModel)]="editForm.nationality" name="nationality" />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-template>
+
+<!-- Template for Change Password Modal -->
+<ng-template #changePasswordModal>
+  <form nz-form [formGroup]="passwordForm">
+    <!-- Email field -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Email</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="email" readonly />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- OTP section -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Mã OTP</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="otpErrorTpl">
+        <div nz-row [nzGutter]="8">
+          <div nz-col [nzSpan]="12">
+            <input nz-input formControlName="otp" placeholder="Nhập mã OTP" />
+          </div>
+          <div nz-col [nzSpan]="12">
+            <button nz-button [disabled]="!passwordForm.get('email')?.valid || countdown > 0" (click)="requestOTP()">
+              {{ countdown > 0 ? countdown + 's' : 'Lấy mã OTP' }}
+            </button>
+          </div>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Old password -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Mật khẩu cũ</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input type="password" formControlName="oldPassword" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- New password -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Mật khẩu mới</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input type="password" formControlName="newPassword" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <!-- Confirm new password -->
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">Xác nhận mật khẩu</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input type="password" formControlName="confirmPassword" />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-template>
+
+<ng-template #otpErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">Vui lòng nhập mã OTP</ng-container>
+  <ng-container *ngIf="control.hasError('minlength') || control.hasError('maxlength')">
+    Mã OTP phải có 6 ký tự
+  </ng-container>
+</ng-template>

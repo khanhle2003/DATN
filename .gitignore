@@ -1,0 +1,7 @@
+# Docker configuration
+docker-compose.yaml
+docker-compose.*.yml
+*.dockerfile
+Dockerfile 
+Dockerfile.backend
+Dockerfile.frontend

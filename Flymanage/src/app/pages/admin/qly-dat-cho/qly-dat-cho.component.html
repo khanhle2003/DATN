@@ -1,0 +1,114 @@
+<h1>Quản lý Đặt Chỗ</h1>
+
+<nz-table 
+  #bookingTable 
+  nzBordered 
+  [nzData]="bookings"
+  [nzPageSize]="pageSize"
+  [nzTotal]="total"
+  [nzPageIndex]="pageIndex"
+  nzTableLayout="fixed">
+  <thead>
+    <tr>
+      <th nzWidth="15%">Ngày Đặt</th>
+      <th nzWidth="10%">Giá Vé</th>
+      <th nzWidth="15%">Mã Đặt Chỗ</th>
+      <th nzWidth="10%">Hạng Ghế</th>
+      <th nzWidth="10%">Trạng Thái</th>
+      <th nzWidth="15%">Chuyến Bay</th>
+      <th nzWidth="15%">Hành Khách</th>
+      <th nzWidth="10%">Hành động</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let booking of bookingTable.data">
+      <td>{{ booking.bookingDate | date:'short' }}</td>
+      <td>{{ booking.price | currency:'VND' }}</td>
+      <td>{{ booking.bookingCode }}</td>
+      <td>{{ booking.seatClass }}</td>
+      <td>{{ booking.status }}</td>
+      <td>{{ getFlightInfo(booking.flightId) || 'N/A' }}</td>
+      <td>{{ booking.passengerName || 'N/A' }}</td>
+      <td>
+        <a nz-button nzType="link" (click)="openEditModal(booking)">
+          <span nz-icon nzType="edit"></span>
+          Edit
+        </a>
+        <a nz-button 
+           nzType="link" 
+           nzDanger
+           nz-popconfirm
+           nzPopconfirmTitle="Bạn có chắc chắn muốn xóa đặt chỗ này?"
+           (nzOnConfirm)="deleteBooking(booking.id)">
+          <span nz-icon nzType="delete"></span>
+          Delete
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<button nz-button nzType="primary" (click)="openAddModal()" class="add-button">
+  <span nz-icon nzType="plus"></span>
+  Thêm mới đặt chỗ
+</button>
+
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  [nzTitle]="isEditing ? 'Cập nhật đặt chỗ' : 'Thêm mới đặt chỗ'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isLoading">
+  
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="bookingForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Ngày Đặt</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng nhập ngày đặt!">
+          <input type="datetime-local" nz-input formControlName="bookingDate" style="width: 100%" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Giá Vé</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng nhập giá vé!">
+          <nz-input-number [nzMin]="0" formControlName="price" [nzStep]="1000" style="width: 100%"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Hạng Ghế</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng chọn hạng ghế!">
+          <nz-select formControlName="seatClass">
+            <nz-option *ngFor="let seat of availableSeats" [nzValue]="seat.code" [nzLabel]="seat.code" [nzDisabled]="!seat.isAvailable"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Trạng Thái</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng nhập trạng thái!">
+          <input type="number" nz-input formControlName="status" style="width: 100%" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Chuyến Bay</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng chọn chuyến bay!">
+          <nz-select formControlName="flightId" (ngModelChange)="onFlightChange($event)">
+            <nz-option *ngFor="let flight of flights" [nzValue]="flight.id" [nzLabel]="'CB' + flight.id + ': ' + flight.departureAirportName + ' → ' + flight.arrivalAirportName"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Hành Khách</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Vui lòng chọn hành khách!">
+          <nz-select formControlName="passengerId">
+            <nz-option *ngFor="let passenger of passengers" [nzValue]="passenger.id" [nzLabel]="passenger.fullName + ' - ' + passenger.identityCard"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

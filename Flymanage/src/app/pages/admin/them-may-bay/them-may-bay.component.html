@@ -1,0 +1,135 @@
+<h1>Thêm máy bay</h1>
+
+<nz-table #editRowTable nzBordered [nzData]="listOfData" nzTableLayout="fixed" [nzPageSize]="pageSize" [nzTotal]="total" [nzPageIndex]="pageIndex">
+    <thead>
+      <tr>
+        <th nzWidth="20%">Mã máy bay</th>
+        <th nzWidth="20%">Loại máy bay</th>
+        <th nzWidth="20%">Số ghế thường</th>
+        <th nzWidth="20%">Số ghế thương gia</th>
+        <th nzWidth="20%">Hãng bay</th>
+        <th nzWidth="20%">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of editRowTable.data">
+        <td>{{ data.aircraftCode }}</td>
+        <td>{{ data.aircraftType }}</td>
+        <td>{{ data.economySeats }}</td>
+        <td>{{ data.businessSeats }}</td>
+        <td>{{ data.airlineName }}</td>
+        <td>
+          <a (click)="showEditModal(data)">Edit</a>
+          <a (click)="deleteAircraft(data.id!)" style="color: red; margin-left: 10px;">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+
+<!-- Nút mở modal thêm -->
+<button nz-button nzType="primary" (click)="showAddModal()" class="add-aircraft-button">
+  <span nz-icon nzType="plus"></span>
+  Thêm Máy Bay
+</button>
+
+<!-- Modal thêm mới -->
+<nz-modal
+  [(nzVisible)]="isAddModalVisible"
+  nzTitle="Thêm Máy Bay Mới"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="addNewAircraft()"
+  [nzOkText]="'Thêm'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #aircraftForm="ngForm" class="aircraft-form">
+      <nz-form-item>
+        <nz-form-label nzFor="aircraftCode">Mã máy bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newAircraft.aircraftCode" name="aircraftCode" id="aircraftCode" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="aircraftType">Loại máy bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newAircraft.aircraftType" name="aircraftType" id="aircraftType" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="economySeats">Số ghế thường</nz-form-label>
+        <nz-form-control>
+          <input type="number" nz-input [(ngModel)]="newAircraft.economySeats" name="economySeats" id="economySeats" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="businessSeats">Số ghế thương gia</nz-form-label>
+        <nz-form-control>
+          <input type="number" nz-input [(ngModel)]="newAircraft.businessSeats" name="businessSeats" id="businessSeats" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="airlineId">Hãng bay</nz-form-label>
+        <nz-form-control>
+          <nz-select [(ngModel)]="newAircraft.airlineId" name="airlineId" id="airlineId" required>
+            <nz-option *ngFor="let airline of airlines" [nzValue]="airline.id" [nzLabel]="airline.name"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<!-- Modal chỉnh sửa -->
+<nz-modal
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Chỉnh Sửa Máy Bay"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="saveEdit()"
+  [nzOkText]="'Lưu'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #editAircraftForm="ngForm" class="aircraft-form">
+      <nz-form-item>
+        <nz-form-label nzFor="editAircraftCode">Mã máy bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingAircraft.aircraftCode" name="aircraftCode" id="editAircraftCode" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="editAircraftType">Loại máy bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingAircraft.aircraftType" name="aircraftType" id="editAircraftType" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="editEconomySeats">Số ghế thường</nz-form-label>
+        <nz-form-control>
+          <input type="number" nz-input [(ngModel)]="editingAircraft.economySeats" name="economySeats" id="editEconomySeats" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="editBusinessSeats">Số ghế thương gia</nz-form-label>
+        <nz-form-control>
+          <input type="number" nz-input [(ngModel)]="editingAircraft.businessSeats" name="businessSeats" id="editBusinessSeats" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="editAirlineId">Hãng bay</nz-form-label>
+        <nz-form-control>
+          <nz-select [(ngModel)]="editingAircraft.airlineId" name="airlineId" id="editAirlineId" required>
+            <nz-option *ngFor="let airline of airlines" [nzValue]="airline.id" [nzLabel]="airline.name"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

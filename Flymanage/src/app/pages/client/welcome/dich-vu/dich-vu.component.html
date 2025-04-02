@@ -1,0 +1,12 @@
+<p-carousel [value]="services" [numVisible]="numVisible" [numScroll]="numScroll" [circular]="circular" [autoplayInterval]="autoplayInterval">
+    <ng-template pTemplate="header">
+        <h2 class="title">Dịch Vụ Của Chúng Tôi</h2>
+    </ng-template>
+    <ng-template pTemplate="item" let-service>
+        <div class="service-item">
+            <img class="service-image" [src]="service.image" alt="{{ service.title }}" />
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+        </div>
+    </ng-template>
+</p-carousel>

@@ -1,0 +1,173 @@
+<div class="schedule-container">
+  <!-- Navigation buttons for week -->
+  <div class="week-navigation">
+    <button nz-button (click)="previousWeek()">
+      <span nz-icon nzType="left"></span>
+    </button>
+    <span class="week-display">{{currentWeekDisplay}}</span>
+    <button nz-button (click)="nextWeek()">
+      <span nz-icon nzType="right"></span>
+    </button>
+  </div>
+
+  <div class="table-container">
+    <nz-table #scheduleTable [nzData]="timeSlots" [nzFrontPagination]="false" 
+              [nzScroll]="{ x: '1200px', y: '500px' }"
+              [nzBordered]="true"
+              [nzLoading]="false">
+      <thead>
+        <tr>
+          <th nzLeft nzWidth="80px">Time</th>
+          <th *ngFor="let day of weekDays" [nzWidth]="'160px'">
+            <div class="day-header">
+              <div class="day-name">{{day.name}}</div>
+              <div class="day-date">{{day.date | date:'dd/MM/yyyy'}}</div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let time of timeSlots">
+          <td nzLeft>{{time}}</td>
+          <td *ngFor="let day of weekDays" (click)="onCellClick(day, time, $event)">
+            <div class="cell-content">
+              <div class="schedule-event" 
+                   *ngFor="let event of getEventsForCell(day.name, time)"
+                   [ngStyle]="getEventStyle(event)"
+                   (click)="onEventClick(event, $event)">
+                <div class="event-code">{{event.flight.flightCode}}</div>
+                <div class="event-time">
+                  {{event.flight.departureTime | date:'HH:mm'}} - {{event.flight.arrivalTime | date:'HH:mm'}}
+                </div>
+                <div class="event-route">
+                  {{event.flight.departureAirportName}} → {{event.flight.arrivalAirportName}}
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <div class="action-buttons">
+    <button nz-button nzType="primary" class="add-btn" (click)="onAddClick()">
+      <span nz-icon nzType="plus"></span> Add
+    </button>
+    <button nz-button class="save-btn" (click)="saveAsPng()">
+      <span nz-icon nzType="download"></span> Save
+    </button>
+    <button nz-button nzDanger class="reset-btn" (click)="resetSchedule()">
+      <span nz-icon nzType="delete"></span> Reset
+    </button>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isAddEventModalVisible"
+  nzTitle="Add Flight"
+  [nzFooter]="null"
+  (nzOnCancel)="handleModalCancel()"
+  [nzWidth]="600"
+  [nzCentered]="true"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="eventForm" (ngSubmit)="submitEventForm()">
+      <!-- Flight Code -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Flight Code</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzErrorTip="Please input flight code!">
+          <input nz-input formControlName="flightCode" placeholder="Enter flight code" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Departure Time -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Departure Time</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzErrorTip="Please select departure time!">
+          <nz-date-picker 
+            nzShowTime 
+            formControlName="departureTime"
+            [nzFormat]="'yyyy-MM-dd HH:mm:ss'"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Arrival Time -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Arrival Time</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzErrorTip="Please select arrival time!">
+          <nz-date-picker 
+            nzShowTime 
+            formControlName="arrivalTime"
+            [nzFormat]="'yyyy-MM-dd HH:mm:ss'"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Base Price -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Base Price</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzErrorTip="Please input valid base price!">
+          <nz-input-number 
+            formControlName="basePrice" 
+            [nzMin]="0"
+            [nzStep]="1000"
+            [nzFormatter]="formatterVND"
+            [nzParser]="parserVND"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Departure Airport -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Departure Airport</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzErrorTip="Please select departure airport!">
+          <nz-select formControlName="departureAirportId" nzPlaceHolder="Select departure airport">
+            <nz-option 
+              *ngFor="let airport of airports" 
+              [nzValue]="airport.id" 
+              [nzLabel]="airport.name"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Arrival Airport -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Arrival Airport</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzErrorTip="Please select arrival airport!">
+          <nz-select formControlName="arrivalAirportId" nzPlaceHolder="Select arrival airport">
+            <nz-option 
+              *ngFor="let airport of airports" 
+              [nzValue]="airport.id" 
+              [nzLabel]="airport.name"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Aircraft -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Aircraft</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzErrorTip="Please select aircraft!">
+          <nz-select formControlName="aircraftId" nzPlaceHolder="Select aircraft">
+            <nz-option 
+              *ngFor="let aircraft of aircrafts" 
+              [nzValue]="aircraft.id" 
+              [nzLabel]="aircraft.aircraftType"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Submit Button -->
+      <nz-form-item>
+        <nz-form-control [nzOffset]="6" [nzSpan]="18">
+          <button nz-button nzType="primary" type="submit">Submit</button>
+          <button nz-button (click)="handleModalCancel()" style="margin-left: 8px;">Cancel</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

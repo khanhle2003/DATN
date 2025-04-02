@@ -1,0 +1,100 @@
+<div class="bookings-container" *ngIf="authService.isAuthenticated()">
+  <h2>Giỏ hàng của bạn</h2>
+
+  <nz-table
+    #basicTable
+    [nzData]="bookings"
+    [nzLoading]="loading"
+    [nzBordered]="true"
+    [nzShowPagination]="true"
+    [nzPageSize]="5"
+  >
+    <thead>
+      <tr>
+        <th [nzWidth]="'60px'">
+          <label nz-checkbox [(ngModel)]="isAllChecked" (ngModelChange)="checkAll($event)"></label>
+        </th>
+        <th>Mã đặt vé</th>
+        <th>Ngày đặt</th>
+        <th>Mã chuyến bay</th>
+        <th>Hạng ghế</th>
+        <th>Giá vé</th>
+        <th>Trạng thái</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let booking of basicTable.data">
+        <td>
+          <label nz-checkbox 
+                 [(ngModel)]="booking.checked" 
+                 [nzDisabled]="booking.status !== 0"
+                 (ngModelChange)="refreshCheckedStatus()">
+          </label>
+        </td>
+        <td>{{ booking.bookingCode }}</td>
+        <td>{{ booking.bookingDate | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ booking.flightId }}</td>
+        <td>{{ booking.seatClass }}</td>
+        <td>{{ booking.price | currency:'VND':'symbol':'1.0-0' }}</td>
+        <td>
+          <nz-tag [nzColor]="getStatusColor(booking.status)">
+            {{ getStatusText(booking.status) }}
+          </nz-tag>
+        </td>
+        <td>
+          <button 
+            nz-button 
+            nzType="text" 
+            nzDanger
+            nz-popconfirm
+            nzPopconfirmTitle="Bạn có chắc muốn xóa đơn hàng này?"
+            (nzOnConfirm)="deleteBooking(booking.id)"
+          >
+            <i nz-icon nzType="delete"></i>
+            Xóa
+          </button>
+          <button 
+            nz-button 
+            nzType="text"
+            [disabled]="booking.status !== 1"
+            (click)="sendBookingCode(booking.id)"
+          >
+            <i nz-icon nzType="mail"></i>
+            Gửi mã
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <div class="payment-summary" *ngIf="bookings.length > 0 && !loading">
+    <div class="summary-content">
+      <div class="selected-count">Đã chọn: {{ getCheckedCount() }} đơn hàng</div>
+      <div class="total-amount">Tổng tiền: {{ calculateTotal() | currency:'VND':'symbol':'1.0-0' }}</div>
+    </div>
+    <button 
+      nz-button 
+      nzType="primary" 
+      [disabled]="getCheckedCount() === 0"
+      (click)="proceedToPayment()"
+    >
+      <i nz-icon nzType="wallet" nzTheme="outline"></i>
+      Thanh toán
+    </button>
+  </div>
+
+  <nz-empty
+    *ngIf="bookings.length === 0 && !loading"
+    [nzNotFoundContent]="emptyContent"
+  ></nz-empty>
+  <ng-template #emptyContent>
+    <div class="empty-container">
+      <p>Bạn chưa có đơn đặt vé nào</p>
+      <button nz-button nzType="primary" routerLink="/aboutus">
+        <i nz-icon nzType="shopping" nzTheme="outline"></i>
+        Đặt vé ngay
+      </button>
+    </div>
+  </ng-template>
+</div>

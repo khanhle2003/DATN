@@ -1,0 +1,28 @@
+<div class="search-container">
+  <div class="search-form">
+    <h2>Tìm kiếm chuyến bay</h2>
+    <div class="search-inputs">
+      <p-dropdown 
+        [options]="searchTypes" 
+        [(ngModel)]="tempSearchType" 
+        optionLabel="label" 
+        optionValue="value"
+        placeholder="Tìm kiếm theo">
+      </p-dropdown>
+      
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input type="text" pInputText [(ngModel)]="tempSearchTerm" placeholder="Nhập từ khóa tìm kiếm" />
+      </span>
+      
+      <p-button label="Tìm kiếm" icon="pi pi-search" (click)="onSearch()"></p-button>
+      <p-button label="Làm mới" icon="pi pi-refresh" severity="secondary" (click)="refreshSearch()"></p-button>
+    </div>
+  </div>
+</div>
+
+<app-all-flight-detail 
+  [searchTerm]="searchTerm" 
+  [searchType]="searchType"
+  [searchClicked]="searchClicked">
+</app-all-flight-detail>

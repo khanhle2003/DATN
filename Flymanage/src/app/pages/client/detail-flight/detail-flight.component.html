@@ -1,0 +1,100 @@
+<div class="container">
+  <nz-page-header (nzBack)="goBack()" nzBackIcon nzTitle="Chi tiết chuyến bay">
+  </nz-page-header>
+
+  <div *ngIf="flight" class="flight-details">
+    <nz-card [nzTitle]="'Chuyến bay: ' + flight.flightCode">
+      <nz-descriptions [nzColumn]="1">
+        <nz-descriptions-item nzTitle="Thời gian khởi hành">
+          {{ flight.departureTime }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Thời gian đến">
+          {{ flight.arrivalTime }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Giá">
+          {{ formatPrice(flight.basePrice) }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Sân bay khởi hành">
+          {{ flight.departureAirportName }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Sân bay đến">
+          {{ flight.arrivalAirportName }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Hãng bay">
+          {{ flight.airlineName }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Máy bay">
+          {{ flight.aircraftName }}
+        </nz-descriptions-item>
+      </nz-descriptions>
+
+      <nz-alert *ngIf="countdownMessage" 
+        nzType="info" 
+        [nzMessage]="countdownMessage"
+        class="my-3">
+      </nz-alert>
+
+      <div class="action-buttons">
+        <ng-container *ngIf="isLoggedIn; else loginPrompt">
+          <button nz-button nzType="primary" 
+            (click)="showSeatSelectionModal('buy')"
+            [disabled]="isFlightExpired">
+            <i nz-icon nzType="shopping"></i>Mua
+          </button>
+          <button nz-button nzType="default" 
+            (click)="showSeatSelectionModal('cart')"
+            [disabled]="isFlightExpired">
+            <i nz-icon nzType="shopping-cart"></i>Thêm vào giỏ hàng
+          </button>
+        </ng-container>
+      </div>
+    </nz-card>
+  </div>
+</div>
+
+<ng-template #loginPrompt>
+  <button nz-button nzType="primary" (click)="promptLogin()">
+    <i nz-icon nzType="login"></i>Đăng nhập để mua
+  </button>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isSeatModalVisible"
+  nzTitle="Chọn ghế"
+  (nzOnCancel)="handleSeatModalCancel()"
+  (nzOnOk)="handleSeatModalOk()"
+  [nzOkDisabled]="!selectedSeat"
+>
+  <ng-container *nzModalContent>
+    <nz-tabset>
+      <nz-tab nzTitle="Ghế phổ thông">
+        <div class="seat-grid">
+          <button
+            *ngFor="let seat of economySeats"
+            nz-button
+            [nzType]="selectedSeat === seat.code ? 'primary' : 'default'"
+            [disabled]="!seat.isAvailable"
+            (click)="selectSeat(seat.code)"
+          >
+            {{seat.code}}
+          </button>
+        </div>
+      </nz-tab>
+
+      <!-- Tab ghế thương gia -->
+      <nz-tab nzTitle="Ghế thương gia">
+        <div class="seat-grid">
+          <button
+            *ngFor="let seat of businessSeats"
+            nz-button
+            [nzType]="selectedSeat === seat.code ? 'primary' : 'default'"
+            [disabled]="!seat.isAvailable"
+            (click)="selectSeat(seat.code)"
+          >
+            {{seat.code}}
+          </button>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </ng-container>
+</nz-modal>

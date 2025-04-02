@@ -1,0 +1,118 @@
+<h1>Thêm hãng bay</h1>
+
+<nz-table #editRowTable nzBordered [nzData]="listOfData" nzTableLayout="fixed"  [nzPageSize]="pageSize" [nzTotal]="total" [nzPageIndex]="pageIndex">
+    <thead>
+      <tr>
+        <th nzWidth="25%">Tên hãng bay</th>
+        <th nzWidth="15%">Mã hãng bay</th>
+        <th nzWidth="40%">Quốc gia</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of editRowTable.data">
+        <td>{{ data.name }}</td>
+        <td>{{ data.code }}</td>
+        <td>{{ data.country }}</td>
+        <td>
+          <a (click)="showEditModal(data)">Edit</a>
+          <a (click)="deleteAirline(data.id)" style="color: red; margin-left: 10px;">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+
+<!-- Moved button below table -->
+<button nz-button [nzType]="'primary'" (click)="showAddModal()" style="margin-top: 16px;">
+  <span>Thêm hãng bay mới</span>
+</button>
+
+<!-- Add Modal -->
+<nz-modal
+  [(nzVisible)]="isAddModalVisible"
+  nzTitle="Thêm hãng bay mới"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="addNewAirline()"
+  [nzOkText]="'Thêm'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #airlineForm="ngForm" class="airline-form">
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Tên hãng bay</label>
+        <input 
+          type="text" 
+          nz-input 
+          [(ngModel)]="newAirline.name" 
+          name="name" 
+          required 
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Mã hãng bay</label>
+        <input 
+          type="text" 
+          nz-input 
+          [(ngModel)]="newAirline.code" 
+          name="code" 
+          required 
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Quốc gia</label>
+        <input 
+          type="text" 
+          nz-input 
+          [(ngModel)]="newAirline.country" 
+          name="country" 
+          required 
+        />
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<!-- Edit Modal -->
+<nz-modal
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Chỉnh sửa hãng bay"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="saveEdit()"
+  [nzOkText]="'Lưu'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #editAirlineForm="ngForm" class="airline-form">
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Tên hãng bay</label>
+        <input 
+          type="text" 
+          nz-input 
+          [(ngModel)]="editingAirline.name" 
+          name="name" 
+          required 
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Mã hãng bay</label>
+        <input 
+          type="text" 
+          nz-input 
+          [(ngModel)]="editingAirline.code" 
+          name="code" 
+          required 
+        />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px;">Quốc gia</label>
+        <input 
+          type="text" 
+          nz-input 
+          [(ngModel)]="editingAirline.country" 
+          name="country" 
+          required 
+        />
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>

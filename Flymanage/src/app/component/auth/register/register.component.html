@@ -1,0 +1,74 @@
+<div class="register-container">
+    <h2>Đăng ký</h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+      <div class="form-fields">
+        <div>
+          <label for="username">Tên đăng nhập</label>
+          <input id="username" type="text" formControlName="username" />
+          <div class="error-message" *ngIf="usernameErrors">
+            {{ usernameErrors }}
+          </div>
+        </div>
+        <div>
+          <label for="password">Mật khẩu</label>
+          <input id="password" type="password" formControlName="password" />
+          <div class="error-message" *ngIf="passwordErrors">
+            {{ passwordErrors }}
+          </div>
+        </div>
+        <div>
+          <label for="confirmPassword">Nhập lại mật khẩu</label>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword" />
+          <div class="error-message" *ngIf="confirmPasswordErrors">
+            {{ confirmPasswordErrors }}
+          </div>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" />
+          <div class="error-message" *ngIf="emailErrors">
+            {{ emailErrors }}
+          </div>
+        </div>
+        <div>
+          <label for="phone">Số điện thoại</label>
+          <input id="phone" type="text" formControlName="phone" />
+          <div class="error-message" *ngIf="phoneErrors">
+            {{ phoneErrors }}
+          </div>
+        </div>
+        <div>
+          <label for="fullName">Họ và tên</label>
+          <input id="fullName" type="text" formControlName="fullName" />
+          <div class="error-message" *ngIf="fullNameErrors">
+            {{ fullNameErrors }}
+          </div>
+        </div>
+        <div>
+          <label for="identityCard">CMND/CCCD</label>
+          <input id="identityCard" type="text" formControlName="identityCard" />
+        </div>
+        <div>
+          <label for="passport">Hộ chiếu</label>
+          <input id="passport" type="text" formControlName="passport" />
+        </div>
+        <div>
+          <label for="dateOfBirth">Ngày sinh</label>
+          <input id="dateOfBirth" type="date" formControlName="dateOfBirth" />
+        </div>
+        <div>
+          <label for="nationality">Quốc tịch</label>
+          <input id="nationality" type="text" formControlName="nationality" />
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+        <button type="submit" [disabled]="!registerForm.valid">ĐĂNG KÝ</button>
+        <div class="social-login">
+          <p>Đã có tài khoản? <a routerLink="/auth/login">Đăng nhập</a></p>
+        </div>
+      </div>
+    </form>
+  </div>
+  

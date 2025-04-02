@@ -1,0 +1,115 @@
+<h1>Quản lý Sân Bay</h1>
+
+<nz-table #airportTable nzBordered [nzData]="listOfAirports" nzTableLayout="fixed" [nzPageSize]="pageSize" [nzTotal]="total" [nzPageIndex]="pageIndex">
+    <thead>
+      <tr>
+        <th nzWidth="20%">Mã sân bay</th>
+        <th nzWidth="20%">Tên sân bay</th>
+        <th nzWidth="20%">Thành phố</th>
+        <th nzWidth="20%">Quốc gia</th>
+        <th nzWidth="20%">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let airport of airportTable.data">
+        <td>{{ airport.code }}</td>
+        <td>{{ airport.name }}</td>
+        <td>{{ airport.city }}</td>
+        <td>{{ airport.country }}</td>
+        <td>
+          <a (click)="showEditModal(airport)">Edit</a>
+          <a (click)="deleteAirport(airport.id!)" style="color: red; margin-left: 10px;">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+
+<!-- Nút mở modal thêm -->
+<button nz-button nzType="primary" (click)="showAddModal()" class="add-airport-button">
+  <span nz-icon nzType="plus"></span>
+  Thêm Sân Bay
+</button>
+
+<!-- Modal thêm mới -->
+<nz-modal
+  [(nzVisible)]="isAddModalVisible"
+  nzTitle="Thêm Sân Bay Mới"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="addNewAirport()"
+  [nzOkText]="'Thêm'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #airportForm="ngForm" class="airport-form">
+      <nz-form-item>
+        <nz-form-label nzFor="code">Mã sân bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newAirport.code" name="code" id="code" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="name">Tên sân bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newAirport.name" name="name" id="name" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="city">Thành phố</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newAirport.city" name="city" id="city" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="country">Quốc gia</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="newAirport.country" name="country" id="country" required />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<!-- Modal chỉnh sửa -->
+<nz-modal
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Chỉnh Sửa Sân Bay"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="saveEdit()"
+  [nzOkText]="'Lưu'"
+  [nzCancelText]="'Hủy'"
+>
+  <ng-container *nzModalContent>
+    <form #editAirportForm="ngForm" class="airport-form">
+      <nz-form-item>
+        <nz-form-label nzFor="editCode">Mã sân bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingAirport.code" name="code" id="editCode" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="editName">Tên sân bay</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingAirport.name" name="name" id="editName" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="editCity">Thành phố</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingAirport.city" name="city" id="editCity" required />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzFor="editCountry">Quốc gia</nz-form-label>
+        <nz-form-control>
+          <input type="text" nz-input [(ngModel)]="editingAirport.country" name="country" id="editCountry" required />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
